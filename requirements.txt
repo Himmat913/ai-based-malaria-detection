@@ -1,1 +1,7 @@
 streamlit
+tensorflow==2.16.1
+huggingface_hub
+numpy==1.26.4
+pillow
+opencv-python-headless==4.10.0.84
+matplotlib
