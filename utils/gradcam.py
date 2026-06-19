@@ -5,6 +5,8 @@ from PIL import Image
 from tensorflow.keras.applications.vgg19 import preprocess_input
 
 IMG_SIZE = 224
+LAST_CONV_LAYER = "block4_conv4"
+THRESHOLD = 0.45
 
 
 def generate_gradcam(model, image):
@@ -23,16 +25,6 @@ def generate_gradcam(model, image):
         axis=0
     )
 
-    last_conv_layer_name = "block4_conv4"
-
-    grad_model = tf.keras.models.Model(
-        inputs=model.inputs,
-        outputs=[
-            model.get_layer(last_conv_layer_name).output,
-            model.outputs[0]
-        ]
-    )
-
     prediction = float(
         model.predict(
             processed,
@@ -46,7 +38,13 @@ def generate_gradcam(model, image):
         else "parasitized"
     )
 
-    threshold = 0.45
+    grad_model = tf.keras.models.Model(
+        inputs=model.inputs,
+        outputs=[
+            model.get_layer(LAST_CONV_LAYER).output,
+            model.outputs[0]
+        ]
+    )
 
     with tf.GradientTape() as tape:
 
@@ -110,36 +108,75 @@ def generate_gradcam(model, image):
     if heatmap.max() > 0:
         heatmap = heatmap / heatmap.max()
 
-    heatmap[heatmap < threshold] = 0
+    heatmap[heatmap < THRESHOLD] = 0
 
-    heatmap_resized = cv2.resize(
-        heatmap,
-        (
-            img_rgb.shape[1],
-            img_rgb.shape[0]
+    if target_class == "parasitized":
+
+        heatmap_resized = cv2.resize(
+            heatmap,
+            (
+                img_rgb.shape[1],
+                img_rgb.shape[0]
+            )
         )
-    )
 
-    heatmap_uint8 = np.uint8(
-        255 * heatmap_resized
-    )
+        heatmap_uint8 = np.uint8(
+            255 * heatmap_resized
+        )
 
-    heatmap_color = cv2.applyColorMap(
-        heatmap_uint8,
-        cv2.COLORMAP_JET
-    )
+        heatmap_color = cv2.applyColorMap(
+            heatmap_uint8,
+            cv2.COLORMAP_JET
+        )
 
-    heatmap_color = cv2.cvtColor(
-        heatmap_color,
-        cv2.COLOR_BGR2RGB
-    )
+        heatmap_color = cv2.cvtColor(
+            heatmap_color,
+            cv2.COLOR_BGR2RGB
+        )
 
-    overlay = cv2.addWeighted(
-        img_rgb,
-        0.55,
-        heatmap_color,
-        0.45,
-        0
-    )
+        overlay = cv2.addWeighted(
+            img_rgb,
+            0.55,
+            heatmap_color,
+            0.45,
+            0
+        )
+
+    else:
+
+        heatmap = np.power(
+            heatmap,
+            1.6
+        )
+
+        heatmap_resized = cv2.resize(
+            heatmap,
+            (
+                img_rgb.shape[1],
+                img_rgb.shape[0]
+            )
+        )
+
+        heatmap_uint8 = np.uint8(
+            255 * heatmap_resized
+        )
+
+        heatmap_color = cv2.applyColorMap(
+            heatmap_uint8,
+            cv2.COLORMAP_WINTER
+        )
+
+        heatmap_color = cv2.cvtColor(
+            heatmap_color,
+            cv2.COLOR_BGR2RGB
+        )
+
+        overlay = cv2.addWeighted(
+            img_rgb,
+            0.75,
+            heatmap_color,
+            0.25,
+            0
+        )
 
     return Image.fromarray(overlay)
