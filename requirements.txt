@@ -1,0 +1,9 @@
+# The UI styling targets Streamlit 1.60's DOM and theme options; it was tested on
+# this exact version. Upgrade deliberately and re-check the layout if you do.
+streamlit==1.60.0
+tensorflow==2.16.1
+huggingface_hub
+numpy==1.26.4
+pillow
+opencv-python-headless==4.10.0.84
+matplotlib

@@ -1,0 +1,36 @@
+# Visual system adapted from the "Modern Product Launch" Figma reference:
+# white canvas, olive primary, light-sage surfaces, hairline borders,
+# serif headings, DM Sans body text and monospace labels.
+# Most component styling comes from these theme values; ui/styles.css only
+# adds the layout and the custom HTML blocks the theme cannot express.
+
+[theme]
+base = "light"
+primaryColor = "#485c11"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f1f5f1"
+textColor = "#111111"
+borderColor = "#e3e6e0"
+showWidgetBorder = true
+linkColor = "#485c11"
+linkUnderline = false
+baseRadius = "0.75rem"
+buttonRadius = "full"
+redColor = "#a3401f"
+greenColor = "#485c11"
+font = "DM Sans:https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300..700&display=swap"
+headingFont = "EB Garamond:https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&display=swap"
+headingFontWeights = 400
+codeFont = "DM Mono:https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap"
+codeBackgroundColor = "#f1f5f1"
+
+[client]
+toolbarMode = "minimal"
+showSidebarNavigation = false
+
+[server]
+headless = true
+maxUploadSize = 20
+
+[browser]
+gatherUsageStats = false

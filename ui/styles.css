@@ -1,0 +1,421 @@
+/* ------------------------------------------------------------------
+   Malaria Detection System — layout and custom blocks.
+   Colours, fonts, radii and widget styling come from .streamlit/config.toml.
+   This file only covers page layout, the custom HTML blocks and a few
+   widget refinements the theme cannot express.
+   ------------------------------------------------------------------ */
+
+:root {
+  --mx-ink: #111111;
+  --mx-muted: #5f625c;
+  --mx-faint: #8b8f86;
+  --mx-rule: #e3e6e0;
+  --mx-sage-50: #f6f9f6;
+  --mx-sage-100: #edf4f1;
+  --mx-sage-400: #8e9c78;
+  --mx-lime: #dfecc6;
+  --mx-olive: #485c11;
+  --mx-olive-ink: #3a4a0d;
+  --mx-clay: #a3401f;
+  --mx-serif: "EB Garamond", "Iowan Old Style", Georgia, serif;
+  --mx-mono: "DM Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --mx-radius-lg: 1.5rem;
+  --mx-gutter: clamp(1rem, 3vw, 2.5rem);
+}
+
+/* ---------- Page frame: one scroll container, no sidebar ---------- */
+/* The Streamlit header only hosts the toolbar; the app has its own nav. */
+[data-testid="stHeader"] { display: none; }
+
+[data-testid="stMainBlockContainer"] {
+  max-width: calc(1200px + 2 * var(--mx-gutter));
+  padding: 1.25rem var(--mx-gutter) 2.5rem;
+}
+
+/* The element that injects this stylesheet should not leave a gap */
+[data-testid="stElementContainer"]:has(style[data-mx-styles]) { display: none; }
+
+/* Section anchors land with a little breathing room */
+[id="analyze"], [id="model"], [id="about"] { scroll-margin-top: 1rem; }
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-testid="stMain"] { scroll-behavior: smooth; }
+}
+
+/* ---------- Type primitives ---------- */
+.mx-label {
+  font-family: var(--mx-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.01em;
+  color: var(--mx-olive);
+  margin: 0 0 0.75rem;
+}
+
+.mx-muted { color: var(--mx-muted); line-height: 1.6; margin: 0; }
+.mx-small { font-size: 0.85rem; }
+.mx-muted code, .mx-specs code {
+  font-family: var(--mx-mono);
+  font-size: 0.82em;
+  background: var(--mx-sage-100);
+  border-radius: 0.35rem;
+  padding: 0.05rem 0.35rem;
+  color: var(--mx-ink);
+}
+
+.mx-section-intro h2,
+.mx-split h2 {
+  font-family: var(--mx-serif);
+  font-weight: 400;
+  font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.75rem;
+  padding: 0;
+}
+
+/* ---------- Navigation ---------- */
+.mx-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.25rem 0 1rem;
+}
+
+.mx-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--mx-ink) !important;
+  text-decoration: none !important;
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+}
+.mx-brand__logo { width: 28px; height: auto; display: block; }
+
+.mx-nav__links { display: flex; gap: 1.75rem; }
+.mx-nav__links a,
+.mx-footer__links a {
+  color: var(--mx-ink) !important;
+  text-decoration: none !important;
+  font-weight: 500;
+  font-size: 0.95rem;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s ease;
+}
+.mx-nav__links a:hover,
+.mx-footer__links a:hover { border-bottom-color: currentColor; }
+
+.mx-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.6rem 1.15rem;
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-decoration: none !important;
+  transition: background-color 0.15s ease;
+  white-space: nowrap;
+}
+.mx-pill--dark { background: var(--mx-olive); color: #fff !important; }
+.mx-pill--dark:hover { background: var(--mx-olive-ink); }
+
+a:focus-visible,
+[data-testid="stMain"] button:focus-visible,
+[data-testid="stFileUploaderDropzone"]:focus-visible {
+  outline: 2px solid var(--mx-olive);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- Hero ---------- */
+.mx-hero {
+  border-top: 1px solid var(--mx-rule);
+  padding: clamp(1.75rem, 4vw, 3rem) 0 clamp(1.5rem, 3vw, 2.25rem);
+}
+.mx-hero__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: end;
+}
+.mx-hero h1 {
+  font-family: var(--mx-serif);
+  font-weight: 400;
+  font-size: clamp(2.6rem, 6.5vw, 5.25rem);
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+  margin: 0;
+  padding: 0;
+}
+.mx-lede {
+  color: var(--mx-muted);
+  font-size: 1.02rem;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 34rem;
+}
+.mx-lede strong { color: var(--mx-ink); font-weight: 600; }
+
+/* ---------- Analyze workspace ---------- */
+.mx-section-intro {
+  border-top: 1px solid var(--mx-rule);
+  padding-top: 1.75rem;
+  margin-bottom: 0.25rem;
+}
+.mx-section-intro .mx-muted { max-width: 30rem; }
+
+/* File uploader: tie the dropzone into the palette */
+[data-testid="stFileUploaderDropzone"] {
+  background: var(--mx-sage-50);
+  border: 1px dashed #c3ccb8;
+  border-radius: 1rem;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+[data-testid="stFileUploaderDropzone"]:hover,
+[data-testid="stFileUploaderDropzone"]:focus-within {
+  border-color: var(--mx-olive);
+  background: var(--mx-sage-100);
+}
+[data-testid="stFileChip"] { background: #fff; border: 1px solid var(--mx-rule); }
+[data-testid="stFileChipName"] { overflow-wrap: anywhere; }
+
+/* Primary actions read like the reference's pill buttons */
+[data-testid="stBaseButton-primary"],
+[data-testid="stBaseButton-secondary"] {
+  font-weight: 600;
+  min-height: 2.75rem;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+[data-testid="stDownloadButton"] [data-testid="stBaseButton-secondary"],
+.stButton [data-testid="stBaseButton-secondary"] {
+  background: var(--mx-lime);
+  border-color: var(--mx-lime);
+  color: var(--mx-ink);
+}
+[data-testid="stDownloadButton"] [data-testid="stBaseButton-secondary"]:hover,
+.stButton [data-testid="stBaseButton-secondary"]:hover {
+  background: #d2e3b1;
+  border-color: #d2e3b1;
+  color: var(--mx-ink);
+}
+
+/* File details */
+.mx-specs {
+  display: grid;
+  grid-template-columns: minmax(7rem, 0.42fr) minmax(0, 1fr);
+  margin: 0;
+  border-top: 1px solid var(--mx-rule);
+}
+.mx-specs dt,
+.mx-specs dd {
+  margin: 0;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--mx-rule);
+  line-height: 1.5;
+}
+.mx-specs dt {
+  font-family: var(--mx-mono);
+  font-size: 0.8rem;
+  color: var(--mx-faint);
+  padding-right: 1rem;
+  padding-top: 0.95rem;
+}
+.mx-specs dd { color: var(--mx-ink); font-size: 0.95rem; }
+.mx-specs a { color: var(--mx-olive) !important; text-decoration: underline; text-underline-offset: 2px; }
+.mx-specs dd .mx-muted { display: block; font-size: 0.85rem; margin-top: 0.2rem; }
+.mx-specs--compact dt, .mx-specs--compact dd { padding-top: 0.55rem; padding-bottom: 0.55rem; }
+.mx-filename { overflow-wrap: anywhere; word-break: break-word; }
+
+.mx-note {
+  margin: 0.75rem 0 0;
+  padding: 0.7rem 0.9rem;
+  background: var(--mx-sage-100);
+  border-radius: 0.75rem;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: var(--mx-ink);
+}
+
+/* Original / Grad-CAM comparison */
+.mx-compare {
+  border-top: 1px solid var(--mx-rule);
+  padding-top: 1.75rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 1rem;
+}
+.mx-figure { margin: 0; min-width: 0; }
+.mx-figure .mx-label { margin-bottom: 0.5rem; }
+
+/* The stage is a stable, responsive box; the image is always contained,
+   never cropped or stretched, whatever the viewport, zoom or file shape. */
+.mx-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1; /* overridden inline to follow the image's proportions */
+  max-height: 30rem;
+  background: var(--mx-sage-100);
+  border-radius: var(--mx-radius-lg);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+.mx-stage img {
+  position: absolute;
+  inset: 0.75rem;
+  width: calc(100% - 1.5rem);
+  height: calc(100% - 1.5rem);
+  object-fit: contain;
+  object-position: center;
+  border-radius: 0.5rem;
+}
+.mx-stage__empty {
+  font-family: var(--mx-mono);
+  font-size: 0.8rem;
+  color: var(--mx-faint);
+  text-align: center;
+  padding: 1rem;
+}
+.mx-caption {
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+  color: var(--mx-faint);
+  line-height: 1.45;
+}
+
+/* ---------- Three-column rule grid (how it works / result) ---------- */
+.mx-band { margin-top: 1.25rem; }
+.mx-grid3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+.mx-col { border-top: 1px solid var(--mx-rule); padding-top: 1.25rem; min-width: 0; }
+.mx-col h3 {
+  font-family: var(--mx-serif);
+  font-weight: 400;
+  font-size: 1.3rem;
+  margin: 0.75rem 0 0.4rem;
+  padding: 0;
+}
+.mx-numeral {
+  display: block;
+  font-size: clamp(2.5rem, 5vw, 3.75rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--mx-faint);
+}
+
+.mx-result { padding-top: 0.5rem; }
+.mx-result[data-tone="alert"] { --mx-tone: var(--mx-clay); }
+.mx-result[data-tone="clear"] { --mx-tone: var(--mx-olive); }
+.mx-result[data-tone="neutral"] { --mx-tone: var(--mx-ink); }
+
+.mx-verdict {
+  font-family: var(--mx-serif);
+  font-size: clamp(2.2rem, 4vw, 3.1rem);
+  line-height: 1;
+  color: var(--mx-tone);
+  margin: 0 0 0.6rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  overflow-wrap: anywhere;
+}
+.mx-verdict__marker { font-size: 0.45em; transform: translateY(-0.35em); }
+
+.mx-score {
+  font-size: clamp(2.2rem, 4vw, 3.1rem);
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin: 0 0 0.9rem;
+  color: var(--mx-ink);
+}
+.mx-score span { font-size: 0.5em; margin-left: 0.1em; color: var(--mx-faint); }
+
+.mx-meter {
+  height: 4px;
+  background: var(--mx-rule);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 0.8rem;
+}
+.mx-meter span { display: block; height: 100%; background: var(--mx-tone); border-radius: inherit; }
+
+.mx-advice {
+  margin: 1.5rem 0 0;
+  padding: 0.9rem 1.1rem;
+  border-radius: 0.9rem;
+  background: var(--mx-sage-100);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+/* ---------- Model / About ---------- */
+.mx-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  border-top: 1px solid var(--mx-rule);
+  padding-top: 2.25rem;
+  margin-top: 1rem;
+}
+.mx-split > div:first-child { max-width: 26rem; }
+
+.mx-list { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--mx-rule); }
+.mx-list li {
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1fr);
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--mx-rule);
+  margin: 0;
+}
+.mx-list p { margin: 0; color: var(--mx-muted); line-height: 1.55; }
+.mx-list strong { color: var(--mx-ink); font-weight: 600; }
+.mx-index { color: var(--mx-faint); font-weight: 500; }
+
+/* ---------- Footer ---------- */
+.mx-footer { border-top: 1px solid var(--mx-rule); margin-top: 2.5rem; padding-top: 1.5rem; }
+.mx-footer__links { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 1.75rem; }
+.mx-footer__meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  font-family: var(--mx-mono);
+  font-size: 0.78rem;
+  color: var(--mx-olive);
+}
+
+/* ---------- Motion ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .mx-reveal { animation: mx-fade 0.28s ease-out both; }
+  @keyframes mx-fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .mx-hero__row,
+  .mx-split { grid-template-columns: minmax(0, 1fr); }
+  .mx-hero__row { gap: 1rem; }
+}
+
+@media (max-width: 720px) {
+  .mx-grid3 { grid-template-columns: minmax(0, 1fr); gap: 0.5rem; }
+  .mx-col { padding-bottom: 0.75rem; }
+}
+
+@media (max-width: 640px) {
+  .mx-nav { flex-wrap: wrap; row-gap: 0.75rem; }
+  .mx-nav__links { order: 3; width: 100%; gap: 1.25rem; }
+  .mx-pill { padding: 0.5rem 0.95rem; font-size: 0.86rem; }
+  .mx-specs { grid-template-columns: minmax(5.5rem, 0.5fr) minmax(0, 1fr); }
+}
+
+/* Streamlit indents lists inside st.html; these lists are full-bleed rule lists. */
+[data-testid="stHtml"] .mx-specs,
+[data-testid="stHtml"] .mx-list { padding-inline-start: 0; }
